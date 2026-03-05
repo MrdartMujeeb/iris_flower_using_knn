@@ -9,7 +9,7 @@ st.title("Iris Flower Prediction App")
 name = st.text_input("Enter your Name")
 
 # Load Dataset
-data = pd.read_csv("data/iris.csv")
+data = pd.read_csv("iris.csv")
 
 # Load Model
 model = pickle.load(open("model.pkl", "rb"))
@@ -63,3 +63,4 @@ if st.button("Make Prediction"):
 
     if name:
         st.write(f"Thank you {name} for using the application!")
+
