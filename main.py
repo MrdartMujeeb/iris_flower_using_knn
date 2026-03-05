@@ -1,22 +1,65 @@
 import streamlit as st
 import pandas as pd
 import pickle
-st.header("Iris flower Prediction App")                                                                                                                     #aftab
-st.text_input("Enter your Name: ", key="name")                                                                                                              #aftab
-data = pd.read_csv('Iris.csv')                                                                                                                              #aftab
-model = pickle.load(open('model.json', 'rb'))                                                                                                               #aftab
-if st.checkbox('Show Training Dataframe'):                                                                                                                  #aftab
-    data
-st.subheader("Please select relevant features of your flower!")
-input_Length1 = st.slider('Sepal length(cm)', 0.0, max(data["SepalLengthCm"]),1.0)
-input_Length2 = st.slider('Sepal Width(cm)', 0.0, max(data["SepalWidthCm"]),1.0)
-input_Length3 = st.slider('Petal length(cm)', 0.0, max(data["PetalLengthCm"]),1.0)
-input_Height = st.slider('Petal Width(cm)', 0.0, max(data["PetalWidthCm"]),1.0)
-if st.button('Make Prediction'):
-    data={'SepalLengthCm':[input_Length1], 'SepalWidthCm':[input_Length2], 'PetalLengthCm':[input_Length3], 'PetalWidthCm':[input_Height]}
-    inputs = pd.DataFrame(data)
-    prediction = model.predict(inputs)
-    print("final pred", prediction)
-    st.write(f"Your flower species is: {prediction}")
-    st.write(f"Thank you {st.session_state.name}! I hope you liked it.")
-    
+
+# Page Title
+st.title("Iris Flower Prediction App")
+
+# User Name Input
+name = st.text_input("Enter your Name")
+
+# Load Dataset
+data = pd.read_csv("data/iris.csv")
+
+# Load Model
+model = pickle.load(open("model.pkl", "rb"))
+
+# Show Dataset Option
+if st.checkbox("Show Training Dataset"):
+    st.write(data)
+
+st.subheader("Select the Flower Features")
+
+# Feature Inputs
+sepal_length = st.slider(
+    "Sepal Length (cm)",
+    float(data["SepalLengthCm"].min()),
+    float(data["SepalLengthCm"].max()),
+)
+
+sepal_width = st.slider(
+    "Sepal Width (cm)",
+    float(data["SepalWidthCm"].min()),
+    float(data["SepalWidthCm"].max()),
+)
+
+petal_length = st.slider(
+    "Petal Length (cm)",
+    float(data["PetalLengthCm"].min()),
+    float(data["PetalLengthCm"].max()),
+)
+
+petal_width = st.slider(
+    "Petal Width (cm)",
+    float(data["PetalWidthCm"].min()),
+    float(data["PetalWidthCm"].max()),
+)
+
+# Prediction Button
+if st.button("Make Prediction"):
+
+    input_data = pd.DataFrame(
+        {
+            "SepalLengthCm": [sepal_length],
+            "SepalWidthCm": [sepal_width],
+            "PetalLengthCm": [petal_length],
+            "PetalWidthCm": [petal_width],
+        }
+    )
+
+    prediction = model.predict(input_data)
+
+    st.success(f"Predicted Flower Species: {prediction[0]}")
+
+    if name:
+        st.write(f"Thank you {name} for using the application!")
